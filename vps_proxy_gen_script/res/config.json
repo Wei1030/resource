@@ -7,7 +7,7 @@
   "inbounds": [
     {
       "tag": "tcp_in",
-      "port": 8888, // ·þÎñÆ÷¼àÌý¶Ë¿Ú
+      "port": 8888,
       "protocol": "vmess",
       "settings": {
         "clients": [
@@ -49,10 +49,11 @@
         "kcpSettings": {
           "uplinkCapacity": 100,
           "downlinkCapacity": 100,
-          "congestion": false,
+          "congestion": true,
           "header": {
             "type": "none"
-          }
+          },
+          "seed": "{8F9AB45C-2693-4E4D-8FCF-E3944F54DC35}"
         }
       },
       "sniffing": {
