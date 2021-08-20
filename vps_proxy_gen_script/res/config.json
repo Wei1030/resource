@@ -66,9 +66,42 @@
       }
     },
     {
+      "tag": "noseed_kcp_in",
+      "port": 8890,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "ee003765-a775-4748-bfb4-f73b7901a48f",
+            "level": 99,
+            "email": "maowei208@126.com"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "kcp",
+        "kcpSettings": {
+          "uplinkCapacity": 100,
+          "downlinkCapacity": 100,
+          "congestion": true,
+          "header": {
+            "type": "none"
+          }
+        }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ],
+        "metadataOnly": false
+      }
+    },
+    {
       "tag": "api",
       "listen": "127.0.0.1",
-      "port": 8890,
+      "port": 8891,
       "protocol": "dokodemo-door",
       "settings": {
         "address": "127.0.0.1"
@@ -107,9 +140,16 @@
     ]
   },
   "routing": {
-    "domainStrategy": "IPOnDemand",
+    "domainStrategy": "IPIfNonMatch",
     "domainMatcher": "mph",
-    "rules": [      
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": [
+          "api"
+        ],
+        "outboundTag": "api"
+      },
       {
         "type": "field",
         "ip": [
@@ -153,13 +193,6 @@
           "domain:shenyun.com"
         ],
         "outboundTag": "blocked"
-      },
-      {
-        "type": "field",
-        "inboundTag": [
-          "api"
-        ],
-        "outboundTag": "api"
       }
     ]
   },
