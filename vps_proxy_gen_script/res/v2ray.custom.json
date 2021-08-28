@@ -1,0 +1,190 @@
+{
+	"log": {
+		"access": "none",
+		"loglevel": "warning",
+		"error": "/var/log/v2ray-error.log"
+	},
+	"dns": {
+		"tag": "inner_dns_in",
+		"hosts": {			
+			"dns.google": "8.8.8.8",
+			"dns.pub": "119.29.29.29",
+			"dns.alidns.com": "223.5.5.5",
+			"geosite:category-ads-all": "127.0.0.1"
+		},
+		"servers": [
+			{
+				"address": "8.8.8.8",
+				"port": 53,
+				"domains": [
+					"geosite:geolocation-!cn"
+				],
+				"expectIPs": [
+					"geoip:!cn"
+				]
+			},
+			{
+				"address": "1.1.1.1",
+				"port": 53,
+				"domains": [
+					"geosite:geolocation-!cn"
+				],
+				"expectIPs": [
+					"geoip:!cn"
+				]
+			},
+			"localhost"
+		]
+	},
+	"routing": {
+		"domainStrategy": "AsIs",
+		"rules": [
+			{
+				"type": "field",
+				"domain": [
+					"geosite:category-ads-all"
+				],
+				"outboundTag": "block"
+			},
+			{
+				"type": "field",
+				"protocol": [
+					"bittorrent"
+				],
+				"outboundTag": "direct"
+			},
+			{
+				"type": "field",
+				"port": "53",
+				"network": "udp",
+				"inboundTag": [
+					"transparent"
+				],
+				"outboundTag": "dns_out"
+			},
+			{
+				"type": "field",
+				"ip": [
+					"8.8.8.8",
+					"1.1.1.1",
+					"208.67.222.222"
+				],
+				"outboundTag": "proxy"
+			},
+			{
+				"type": "field",
+				"domain": [
+					"geosite:google",
+					"geosite:github"
+				],
+				"outboundTag": "proxy"
+			},
+			{
+				"type": "field",
+				"domain": [
+					"geosite:cn",
+					"geosite:private",
+					"geosite:category-games@cn"
+				],
+				"outboundTag": "direct"
+			},
+			{
+				"type": "field",
+				"ip": [
+					"geoip:private",
+					"geoip:cn"
+				],
+				"outboundTag": "direct"
+			},
+			{
+				"type": "field",
+				"port": "123",
+				"network": "udp",
+				"outboundTag": "direct"
+			}
+		]
+	},
+	"inbounds": [
+		{
+			"port": 1081,
+			"protocol": "dokodemo-door",
+			"settings": {
+				"followRedirect": true,
+				"network": "tcp,udp"
+			},
+			"streamSettings": {
+				"sockopt": {
+					"tproxy": "tproxy"
+				}
+			},
+			"tag": "transparent",
+			"sniffing": {
+				"enabled": true,
+				"destOverride": [
+					"http",
+					"tls"
+				]
+			}
+		}
+	],
+	"outbounds": [
+		{
+			"protocol": "vless",
+			"settings": {
+				"vnext": [
+					{
+						"address": "156.234.25.14",
+						"port": 8080,
+						"users": [
+							{
+								"id": "ee003765-a775-4748-bfb4-f73b7901a48f",								
+								"encryption": "none",
+								"level": 99
+							}
+						]
+					}
+				]
+			},
+			"streamSettings": {
+				"network": "tcp",
+				"security": "tls",
+				"tlsSettings": {
+					"serverName": "mervyn.com",
+					"alpn" : ["http/1.1"],
+					"allowInsecure" : true,
+					"certificates" : []
+				},
+				"sockopt": {
+					"mark": 255
+				}
+			},
+			"tag": "proxy"
+		},
+		{
+			"protocol": "freedom",
+			"settings": {
+				"domainStrategy": "AsIs"
+			},
+			"streamSettings": {
+				"sockopt": {
+					"mark": 255
+				}
+			},
+			"tag": "direct"
+		},
+		{
+			"protocol": "blackhole",
+			"settings": {
+				"response": {
+					"type": "none"
+				}
+			},
+			"streamSettings": {
+				"sockopt": {
+					"mark": 255
+				}
+			},
+			"tag": "block"
+		}
+	]
+}
