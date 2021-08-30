@@ -8,8 +8,8 @@ curl -O https://raw.githubusercontent.com/Wei1030/resource/main/vps_proxy_gen_sc
 curl -O https://raw.githubusercontent.com/Wei1030/resource/main/vps_proxy_gen_script/res/server.key
 
 \cp -f config.json /usr/local/etc/v2ray/config.json
-\cp -f config.json /usr/local/etc/v2ray/server.crt
-\cp -f config.json /usr/local/etc/v2ray/server.key
+\cp -f server.crt /usr/local/etc/v2ray/server.crt
+\cp -f server.key /usr/local/etc/v2ray/server.key
 
 systemctl stop firewalld
 
